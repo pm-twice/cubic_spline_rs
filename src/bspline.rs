@@ -116,37 +116,26 @@ impl BSpline {
         }
     }
 
-    
-    pub fn interpolate_vec(&self, t: &Vec<f64>) -> Vec<f64> {
-        t.iter().map(|v| self.interpolate(*v)).collect()
-    }
-
-    /// 与えられたtに対して、計算された係数からBスプライン補間を行う関数
-    pub fn interpolate(&self, x: f64) -> f64 {
+    /// 等間隔の指定された区間数に対してBスプライン補間を行う関数
+    /// x座標の指定では正しく動作できない。
+    /// 0 < t < 1で指定する。
+    /// return (x[:], y[:])
+    pub fn interpolate_vec(&self, num: usize) -> (Vec<f64>, Vec<f64>) {
         // S(u) = sigma_i=0^{p-1} Pi bi,n(u)  
         let n = self.x.len();
 
-        // xを0~1のtにスケーリング
-        let beg = self.x[0];
-        let end = self.x[n-1];
-        let t = if x <= beg {
-            return self.y[0]
-        } else if x >= end {
-            return self.y[n-1]
-        } else {
-            (x - beg)/(end-beg)
-        };
+        let dt = 1.0 / num as f64;
+        let mut rx = vec![0.0; num];
+        let mut ry = vec![0.0; num];
 
-        let mut y = 0.0;
-        let mut ax = 0.0;
-        for i in 0..n {
-            y += self.y[i] * self.calc_basis(i, self.degree, t);
-            ax += self.x[i] * self.calc_basis(i, self.degree, t);
+        for j in 0..num {
+            for i in 0..n {
+                ry[j] += self.y[i] * self.calc_basis(i, self.degree, dt * j as f64);
+                rx[j] += self.x[i] * self.calc_basis(i, self.degree, dt * j as f64);
+            }
         }
 
-        assert!((ax-x).abs() < 1e-2);
-
-        y
+        (rx, ry)
     }
 
     pub fn get_basis_vec(&self, t: &Vec<f64>, dim: usize) -> Vec<f64> {

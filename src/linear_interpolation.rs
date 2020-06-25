@@ -56,6 +56,8 @@ mod tests {
     fn it_works() {
         let x = vec![0.0,1.0,4.0,5.0,8.0];
         let y = vec![0.0,3.0,4.0,1.0,2.0];
+        let lin = LinearInterpolation::new(x,y);
 
+        assert_eq!(1.5, lin.interpolate(0.5));
     }
 }

@@ -12,9 +12,12 @@ def plot_result(org_csv, inter_csv):
     inter = np.loadtxt(inter_csv, delimiter=",", skiprows=1)
 
     plt.plot(org[:,0], org[:,1], linewidth=0, marker="o", label="src")
-    plt.plot(inter[:,0], inter[:,1], label="Vec")
-    plt.plot(inter[:,0], inter[:,2], linestyle="dashed", label="Nalgebra")
-    plt.plot(inter[:,0], inter[:,3], linestyle="dotted", label="Linear")
+    # plt.plot(inter[:,0], inter[:,1], label="Vec")
+    # plt.plot(inter[:,0], inter[:,2], linestyle="dashed", label="Nalgebra")
+    # plt.plot(inter[:,0], inter[:,3], linestyle="dotted", label="Linear")
+    plt.plot(inter[:,0], inter[:,4], label="Bspline(1d)")
+    plt.plot(inter[:,0], inter[:,5], label="Bspline(2d)")
+    plt.plot(inter[:,0], inter[:,6], label="Bspline(3d)")
     plt.legend()
     plt.show()
 
